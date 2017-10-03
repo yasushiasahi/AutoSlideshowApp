@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         playBackButton = (Button) findViewById(R.id.playBackButton);
         playBackButton.setOnClickListener(this);
-
-
 
         // Android 6.0以降の場合
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -75,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void getContentsInfo() {
-
         cursor = getContentResolver().query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
                 null, // 項目(null = 全項目)
@@ -85,23 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         if (cursor.moveToFirst()) {
-
-            Log.d("DEBLOG2", String.valueOf(cursor)); // デバッグ用に追加する
-
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-
-            Log.d("DEBLOG3", String.valueOf(fieldIndex)); // デバッグ用に追加する
-
-            Long id = cursor.getLong(fieldIndex);
-
-            Log.d("DEBLOG4", String.valueOf(id)); // デバッグ用に追加する
-
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-            Log.d("DEBLOG5", String.valueOf(imageUri)); // デバッグ用に追加する
-
-            ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-            imageVIew.setImageURI(imageUri);
+            showImage();
         }
     }
 
@@ -110,11 +90,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v.getId() == R.id.nextButton) {
             if (!playingBack) {
-                getNextImage();
+                showNextImage();
             }
         } else if (v.getId() == R.id.previousButton) {
             if (!playingBack) {
-                getPreviousImage();
+                showPreviousImage();
             }
         } else if (v.getId() == R.id.playBackButton) {
             if (!playingBack) {
@@ -134,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        getNextImage();
+                        showNextImage();
                     }
                 });
             }
@@ -145,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playingBack = true;
     }
 
-    
+
     private void stopPlayBackImage() {
         timer.cancel();
         playBackButton.setText("再生");
@@ -155,89 +135,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void getNextImage() {
+    private void showNextImage() {
         if (cursor.moveToNext()) {
-
-            Log.d("DEBLOG2", String.valueOf(cursor)); // デバッグ用に追加する
-
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-
-            Log.d("DEBLOG3", String.valueOf(fieldIndex)); // デバッグ用に追加する
-
-            Long id = cursor.getLong(fieldIndex);
-
-            Log.d("DEBLOG4", String.valueOf(id)); // デバッグ用に追加する
-
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-            Log.d("DEBLOG5", String.valueOf(imageUri)); // デバッグ用に追加する
-
-            ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-            imageVIew.setImageURI(imageUri);
+            showImage();
         } else {
             if (cursor.moveToFirst()) {
-
-                Log.d("DEBLOG2", String.valueOf(cursor)); // デバッグ用に追加する
-
-                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-
-                Log.d("DEBLOG3", String.valueOf(fieldIndex)); // デバッグ用に追加する
-
-                Long id = cursor.getLong(fieldIndex);
-
-                Log.d("DEBLOG4", String.valueOf(id)); // デバッグ用に追加する
-
-                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-                Log.d("DEBLOG5", String.valueOf(imageUri)); // デバッグ用に追加する
-
-                ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-                imageVIew.setImageURI(imageUri);
+                showImage();
             }
         }
     }
 
 
-    private void getPreviousImage() {
+    private void showPreviousImage() {
         if (cursor.moveToPrevious()) {
-
-            Log.d("DEBLOG2", String.valueOf(cursor)); // デバッグ用に追加する
-
-            int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-
-            Log.d("DEBLOG3", String.valueOf(fieldIndex)); // デバッグ用に追加する
-
-            Long id = cursor.getLong(fieldIndex);
-
-            Log.d("DEBLOG4", String.valueOf(id)); // デバッグ用に追加する
-
-            Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-            Log.d("DEBLOG5", String.valueOf(imageUri)); // デバッグ用に追加する
-
-            ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-            imageVIew.setImageURI(imageUri);
+            showImage();
         } else {
             if (cursor.moveToLast()) {
-
-                Log.d("DEBLOG2", String.valueOf(cursor)); // デバッグ用に追加する
-
-                int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
-
-                Log.d("DEBLOG3", String.valueOf(fieldIndex)); // デバッグ用に追加する
-
-                Long id = cursor.getLong(fieldIndex);
-
-                Log.d("DEBLOG4", String.valueOf(id)); // デバッグ用に追加する
-
-                Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-
-                Log.d("DEBLOG5", String.valueOf(imageUri)); // デバッグ用に追加する
-
-                ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
-                imageVIew.setImageURI(imageUri);
+                showImage();
             }
         }
+    }
+
+    private void showImage() {
+        int fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+        Long id = cursor.getLong(fieldIndex);
+        Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+        ImageView imageVIew = (ImageView) findViewById(R.id.imageView);
+        imageVIew.setImageURI(imageUri);
     }
 
 
