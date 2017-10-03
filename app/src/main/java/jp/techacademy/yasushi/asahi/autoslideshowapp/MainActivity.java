@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
             }
-        }, 100, 500);
+        }, 100, 2000);
         playBackButton.setText("停止");
         nextButton.setVisibility(View.GONE);
         previousButton.setVisibility(View.GONE);
